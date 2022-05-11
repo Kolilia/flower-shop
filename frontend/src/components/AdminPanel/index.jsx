@@ -1,6 +1,6 @@
 import { LinearProgress, Tab, Tabs } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { secondaryThemeColor } from "../../helpers/colors";
 import SwitchRoutes from "./../../routing/SwitchRoutes";
@@ -28,6 +28,14 @@ const Admin = ({ routes }) => {
   const valuePathname = value?.split("?")?.[0];
 
   const finder = location.pathname === valuePathname ? value : false;
+
+  useEffect(() => {
+    const key = sessionStorage.getItem("adminFlowerShopLogin");
+
+    if (!key) {
+      history.replace("/login");
+    }
+  }, [history]);
 
   return (
     <>

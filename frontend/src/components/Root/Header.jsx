@@ -1,6 +1,6 @@
 import { Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ShoppingBasket } from "@material-ui/icons";
+import { ExitToApp, ShoppingBasket } from "@material-ui/icons";
 import { view } from "@risingstack/react-easy-state";
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -46,33 +46,50 @@ const Header = view(() => {
             <Logo />
           </div>
 
-          {!location?.pathname?.includes("admin") && (
-            <div
-              className={classes.icon}
-              onClick={() => history.push("/basket")}
-            >
-              {flowers?.inBasket?.length > 0 ? (
-                <Badge color="primary" badgeContent={flowers?.inBasket?.length}>
+          {!location?.pathname?.includes("admin") &&
+            !location?.pathname?.includes("login") && (
+              <div
+                className={classes.icon}
+                onClick={() => history.push("/basket")}
+              >
+                {flowers?.inBasket?.length > 0 ? (
+                  <Badge
+                    color="primary"
+                    badgeContent={flowers?.inBasket?.length}
+                  >
+                    <ShoppingBasket
+                      fontSize="large"
+                      style={{ marginRight: ".1rem" }}
+                    />
+                  </Badge>
+                ) : (
                   <ShoppingBasket
                     fontSize="large"
                     style={{ marginRight: ".1rem" }}
                   />
-                </Badge>
-              ) : (
-                <ShoppingBasket
-                  fontSize="large"
-                  style={{ marginRight: ".1rem" }}
-                />
-              )}
-              Корзина
+                )}
+                Корзина
+              </div>
+            )}
+
+          {location?.pathname?.includes("admin") && (
+            <div
+              className={classes.icon}
+              onClick={() => {
+                history.replace("/");
+                sessionStorage.removeItem("adminFlowerShopLogin");
+              }}
+            >
+              <ExitToApp fontSize="large" style={{ marginRight: ".1rem" }} />
             </div>
           )}
 
-          {!location?.pathname?.includes("admin") && (
-            <div>
-              <a onClick={() => (ui.openCheckOrder = true)}>Найти заказ</a>
-            </div>
-          )}
+          {!location?.pathname?.includes("admin") &&
+            !location?.pathname?.includes("login") && (
+              <div>
+                <a onClick={() => (ui.openCheckOrder = true)}>Найти заказ</a>
+              </div>
+            )}
         </div>
       </div>
     </header>

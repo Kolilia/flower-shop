@@ -63,6 +63,7 @@ const Login = () => {
 
       if (result) {
         history.replace("/admin/all-orders");
+        sessionStorage.setItem("adminFlowerShopLogin", 1);
       } else {
         ui.error = {
           message: "Неправильный логин или пароль",
