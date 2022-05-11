@@ -1,7 +1,7 @@
 import { DialogActions, FormHelperText } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { view } from "@risingstack/react-easy-state";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { is } from "../../../helpers/is";
@@ -64,6 +64,9 @@ const WithFlowers = view(() => {
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const { inBasket } = flowers;
 
   const form = useForm({
     defaultValues: {
@@ -75,7 +78,21 @@ const WithFlowers = view(() => {
     shouldUnregister: false,
   });
 
-  const mapPhones = flowers.inBasket.map((item) => {
+  useEffect(() => {
+    const arr = [];
+
+    inBasket.forEach((item, key) => {
+      const findEl = arr.find((itemFind) => itemFind?._id === item?._id);
+
+      if (!findEl) {
+        arr.push(item);
+      }
+    });
+
+    setData(arr);
+  }, [inBasket]);
+
+  const mapPhones = data.map((item) => {
     return <Item flower={item} key={item?.id} />;
   });
 

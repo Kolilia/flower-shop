@@ -109,9 +109,13 @@ class orders {
           let arrForFront = [];
 
           for (const order of result?.data) {
-            const flowers = await Flower.find({
-              _id: { $in: order?.flowersIds },
-            });
+            let flowers = [];
+
+            for (let index = 0; index < order?.flowersIds?.length; index++) {
+              flowers[index] = await Flower.findById(
+                order?.flowersIds[index]
+              ).exec();
+            }
 
             const shortFlowers = flowers.map((item) => {
               return {
@@ -162,9 +166,11 @@ class orders {
 
       const order = await Order.findById(orderId).exec();
 
-      const flowers = await Flower.find({
-        _id: { $in: order?.flowersIds },
-      });
+      let flowers = [];
+
+      for (let index = 0; index < order?.flowersIds?.length; index++) {
+        flowers[index] = await Flower.findById(order?.flowersIds[index]).exec();
+      }
 
       const shortFlowers = flowers.map((item) => {
         return item?.name;
@@ -177,15 +183,13 @@ class orders {
         });
       }
 
-      return res
-        .status(200)
-        .json({
-          flowers: shortFlowers.join(", "),
-          execute: order.execute ? "Доставлен" : "Не доставлен",
-          address: order?.address,
-          city: order?.city,
-          postalCode: order?.postalCode,
-        });
+      return res.status(200).json({
+        flowers: shortFlowers.join(", "),
+        execute: order.execute ? "Доставлен" : "Не доставлен",
+        address: order?.address,
+        city: order?.city,
+        postalCode: order?.postalCode,
+      });
     } catch (err) {
       return res.status(400).json({
         message: "Возникла ошибка",
@@ -209,9 +213,13 @@ class orders {
           let arrForFront = [];
 
           for (const order of result?.data) {
-            const flowers = await Flower.find({
-              _id: { $in: order?.flowersIds },
-            });
+            let flowers = [];
+
+            for (let index = 0; index < order?.flowersIds?.length; index++) {
+              flowers[index] = await Flower.findById(
+                order?.flowersIds[index]
+              ).exec();
+            }
 
             const shortFlowers = flowers.map((item) => {
               return item?.name;

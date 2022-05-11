@@ -28,6 +28,7 @@ const CustomTextField = ({
   name,
   placeholder,
   variant = "outlined",
+  style = {},
 }) => {
   const classes = useStyles();
 
@@ -39,7 +40,7 @@ const CustomTextField = ({
       placeholder={placeholder}
       onChange={(e) => onChange(e, e.target.value)}
       disabled={disabled}
-      style={{ fontFamily: "'Roboto Flex', sans-serif" }}
+      style={{ fontFamily: "'Roboto Flex', sans-serif", ...style }}
       InputProps={{
         inputProps: {
           autoComplete: autoComplete || "new-password",
