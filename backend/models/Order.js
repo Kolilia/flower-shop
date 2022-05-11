@@ -4,6 +4,7 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 const Order = new Schema({
   flowersIds: [{ type: String, ref: `Flower` }],
   address: { type: String, required: true },
+  orderId: { type: String, required: true },
   city: { type: String, required: true },
   postalCode: { type: String, required: true },
   execute: { type: Boolean, default: false },
@@ -13,6 +14,7 @@ Order.index({
   address: "text",
   city: "text",
   postalCode: "text",
+  orderId: "text",
 });
 
 Order.plugin(mongoosePaginate);

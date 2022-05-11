@@ -80,7 +80,7 @@ const AllOrders = () => {
         Header: "Цветы",
         disableSortBy: true,
         accessor: (rowData) => {
-          const mapProducts = rowData?.products?.map((item) => {
+          const mapFlowers = rowData?.flowers?.map((item) => {
             return (
               <div key={item?.flowerId} style={{ marginBottom: ".5rem" }}>
                 {item?.name}
@@ -88,7 +88,7 @@ const AllOrders = () => {
             );
           });
 
-          return mapProducts;
+          return mapFlowers;
         },
       },
       {

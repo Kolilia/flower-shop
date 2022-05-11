@@ -9,7 +9,7 @@ router.post(
     check("address", "Адрес обязательное поле").notEmpty(),
     check("city", "Город обязательное поле").notEmpty(),
     check("postalCode", "Почтовый индекс обязательное поле").notEmpty(),
-    check("productsIds", "Не указан какой продукт заказывается").notEmpty(),
+    check("flowersIds", "Не указан какой продукт заказывается").notEmpty(),
   ],
   controller.createOrder
 );

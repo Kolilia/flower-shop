@@ -1,7 +1,7 @@
 import { store } from "@risingstack/react-easy-state";
 
 const ui = store({
-  openSuccessOrderDialog: false,
+  openSuccessOrderDialog: undefined,
   error: undefined,
 });
 

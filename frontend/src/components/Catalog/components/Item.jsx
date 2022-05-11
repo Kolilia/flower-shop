@@ -89,9 +89,9 @@ const Item = view(({ flower }) => {
           }}
           onClick={() => {
             if (!inInsideBasket) {
-              flowers.inBasket = [...flowers.inBasket, flowers];
+              flowers.inBasket = [...flowers.inBasket, flower];
             } else {
-              history.push("/shopping-basket");
+              history.push("/basket");
             }
           }}
           fullWidth

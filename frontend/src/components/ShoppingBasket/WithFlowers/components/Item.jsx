@@ -1,3 +1,4 @@
+import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Delete } from "@material-ui/icons";
 import { view } from "@risingstack/react-easy-state";
@@ -8,9 +9,6 @@ import flowers from "./../../../../store/flowers";
 const useStyles = makeStyles({
   root: {
     display: "flex",
-    backgroundColor: "#fbfbf5",
-    borderRadius: "1rem",
-    padding: "10px 15px",
     marginBottom: "1rem",
     alignItems: "center",
   },
@@ -73,6 +71,8 @@ const Item = view(({ flower }) => {
           <Delete onClick={deleteItem} className={classes.icon} />
         </div>
       </div>
+
+      <Divider />
     </div>
   );
 });

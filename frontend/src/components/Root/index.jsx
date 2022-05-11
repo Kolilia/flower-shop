@@ -148,7 +148,7 @@ const SyncShoppingBasket = view(() => {
 const GlobalSuccessOrder = view(() => {
   const customClose = () => {
     flowers.inBasket = [];
-    ui.openSuccessOrderDialog = false;
+    ui.openSuccessOrderDialog = undefined;
   };
 
   return (
@@ -158,8 +158,8 @@ const GlobalSuccessOrder = view(() => {
       content={
         <>
           <p>
-            Ваш заказ принят и обрабатывается. За статусом заказа мы можете
-            наблюдать во вкладке профиля &apos;Мои заказы&apos;
+            Ваш заказ принят и обрабатывается. Сохраните себе номер заказа{" "}
+            {ui.openSuccessOrderDialog}
           </p>
 
           <DialogActions>

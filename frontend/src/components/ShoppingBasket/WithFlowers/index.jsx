@@ -1,35 +1,36 @@
-import { Divider } from "@material-ui/core";
+import { DialogActions, FormHelperText } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { view } from "@risingstack/react-easy-state";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import { is } from "../../../helpers/is";
+import orders from "../../../store/orders";
+import ui from "../../../store/ui";
+import MyTextField from "../../System/FormComponents/MyTextField";
 import ZeusButton from "../../System/ZeusButton";
 import flowers from "./../../../store/flowers";
 import Item from "./components/Item";
 
 const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    flexFlow: "row wrap",
-    justifyContent: "center",
-  },
   phonesList: {
     flex: 1,
-    minWidth: 600,
-  },
-  total: {
-    minWidth: 250,
-    marginLeft: "1rem",
-    padding: "10px 15px",
+    maxWidth: 500,
+    maxHeight: 400,
+    overflowY: "auto",
     backgroundColor: "#fbfbf5",
     borderRadius: "1rem",
-    height: "min-content",
-    minHeight: 150,
-
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    padding: "10px 15px",
+    marginBottom: "1rem",
+    marginRight: 10,
+  },
+  formAddress: {
+    flex: 1,
+    maxWidth: 500,
+    backgroundColor: "#fbfbf5",
+    borderRadius: "1rem",
+    padding: "10px 15px",
+    marginBottom: "1rem",
   },
 
   boldText: {
@@ -44,10 +45,35 @@ const useStyles = makeStyles({
     justifyContent: "center",
     marginTop: 14,
   },
+  block: {
+    minWidth: 400,
+    padding: "15px 20px",
+    backgroundColor: "#fbfbf5",
+    borderRadius: "1rem",
+    whiteSpace: "nowrap",
+    height: "min-content",
+  },
+
+  blockInputs: {
+    width: "100%",
+    marginBottom: "1rem",
+  },
 });
 
 const WithFlowers = view(() => {
   const classes = useStyles();
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm({
+    defaultValues: {
+      address: "",
+      city: "",
+      postalCode: "",
+    },
+    mode: "onChange",
+    shouldUnregister: false,
+  });
 
   const mapPhones = flowers.inBasket.map((item) => {
     return <Item flower={item} key={item?.id} />;
@@ -61,33 +87,98 @@ const WithFlowers = view(() => {
     return +prev + +next?.price;
   });
 
+  const confirm = useCallback(
+    async (values) => {
+      setLoading(true);
+
+      const mapFlowersIds = flowers.inBasket?.map((item) => item?._id);
+
+      const result = await orders.createOrder({
+        ...values,
+        flowersIds: mapFlowersIds,
+      });
+
+      if (result) {
+        history.replace("/");
+
+        ui.openSuccessOrderDialog = result?._id;
+      }
+
+      setLoading(false);
+    },
+    [history]
+  );
+
   return (
-    <div className={classes.root}>
-      <div className={classes.phonesList}>{mapPhones}</div>
-      <div className={classes.total}>
-        <div>
-          <p className={classes.blockText}>
-            Количество товара:{" "}
-            <b className={classes.boldText}>{flowers.inBasket.length} шт.</b>
-          </p>
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className={classes.phonesList}>{mapPhones}</div>
 
-          <Divider />
+        <div className={classes.formAddress}>
+          <h1>Оформление доставки товаров ({flowers.inBasket.length})</h1>
 
-          <p className={classes.blockText}>
-            Итоговая сумма:{" "}
-            <b className={classes.boldText}>
-              ₽ {is(Object, total) ? total?.price : total}
-            </b>
-          </p>
+          <div className={classes.block}>
+            <div className={classes.blockInputs}>
+              <MyTextField
+                control={form.control}
+                name="address"
+                label="Адрес"
+                rules={{ required: true }}
+                fullWidth
+              />
 
-          <Divider />
+              {form.formState.errors?.address?.type === "required" && (
+                <FormHelperText error>Поле обязательное</FormHelperText>
+              )}
 
-          <div className={classes.btnBlock}>
-            <ZeusButton component={Link} to="/client/checkout">
-              Оформить заказ
-            </ZeusButton>
+              <div style={{ height: 15 }} />
+
+              <MyTextField
+                control={form.control}
+                name="city"
+                label="Город"
+                rules={{ required: true }}
+                fullWidth
+              />
+
+              {form.formState.errors?.city?.type === "required" && (
+                <FormHelperText error>Поле обязательное</FormHelperText>
+              )}
+
+              <div style={{ height: 15 }} />
+
+              <MyTextField
+                control={form.control}
+                name="postalCode"
+                label="Почтовый  индекс"
+                rules={{ required: true }}
+                fullWidth
+              />
+
+              {form.formState.errors?.postalCode?.type === "required" && (
+                <FormHelperText error>Поле обязательное</FormHelperText>
+              )}
+            </div>
+
+            <DialogActions>
+              <ZeusButton
+                loading={loading}
+                onClick={form.handleSubmit(confirm)}
+              >
+                Оформить
+              </ZeusButton>
+            </DialogActions>
           </div>
         </div>
+      </div>
+
+      <div>
+        <p className={classes.blockText}>
+          Итоговая сумма:{" "}
+          <b className={classes.boldText}>
+            ₽ {is(Object, total) ? total?.price : total}
+          </b>
+        </p>
       </div>
     </div>
   );

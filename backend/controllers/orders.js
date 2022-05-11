@@ -25,7 +25,7 @@ class orders {
       const { address, city, postalCode, flowersIds } = req.body;
 
       const flowers = await Flower.find({
-        _id: { $in: order?.flowersIds },
+        _id: { $in: flowersIds },
       });
 
       if (!flowers) {
@@ -41,6 +41,8 @@ class orders {
         postalCode,
         flowersIds,
       });
+
+      order.orderId = order?._id;
 
       await order.save();
 
@@ -113,7 +115,7 @@ class orders {
 
             const shortFlowers = flowers.map((item) => {
               return {
-                productId: item._id,
+                flowerId: item._id,
                 name: item?.name,
               };
             });
