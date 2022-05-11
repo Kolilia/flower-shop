@@ -57,7 +57,7 @@ class flowers {
         });
       }
 
-      const { name, price, type } = req.body;
+      const { name, price, type, description } = req.body;
 
       const imageHref = `http://localhost:3000/static/images/${file?.filename}`;
 
@@ -66,6 +66,7 @@ class flowers {
         type,
         price,
         imageHref,
+        description,
       });
 
       await flower.save();
@@ -141,6 +142,7 @@ class flowers {
       flower.name = body?.name ?? flower.name;
       flower.type = body?.type ?? flower.type;
       flower.price = body?.price ?? flower.price;
+      flower.description = body?.description ?? flower.description;
 
       await flower.save();
 

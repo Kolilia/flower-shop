@@ -55,6 +55,7 @@ const CreateProduct = () => {
       price: "",
       file: null,
       type: "stock",
+      description: "",
     },
     mode: "onChange",
     shouldUnregister: false,
@@ -128,6 +129,18 @@ const CreateProduct = () => {
         {form?.formState?.errors?.price?.type === "required" && (
           <FormHelperText error>Поле обязательное</FormHelperText>
         )}
+
+        <div style={{ height: 10 }} />
+
+        <MyTextField
+          control={form?.control}
+          name="description"
+          label="Описание"
+          autoComplete="off"
+          fullWidth
+          multiline
+          rows={3}
+        />
 
         <div style={{ height: 20 }} />
 

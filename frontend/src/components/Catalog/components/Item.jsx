@@ -1,9 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { view } from "@risingstack/react-easy-state";
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import flowers from "../../../store/flowers";
 import { secondaryThemeColor } from "./../../../helpers/colors";
+import Alert from "./../../System/Alert";
 import ZeusButton from "./../../System/ZeusButton";
 
 const useStyles = makeStyles({
@@ -62,44 +63,62 @@ const Item = view(({ flower }) => {
   const classes = useStyles();
   const history = useHistory();
 
+  const [open, setOpen] = useState(false);
+
   const inInsideBasket = flowers.inBasket.some(
     (item) => item?._id === flower?._id
   );
 
   return (
-    <div className={classes.gridMode}>
-      <div>
-        <img src={flower?.imageHref} alt="" className={classes.image} />
+    <>
+      <div className={classes.gridMode}>
+        <div>
+          <img src={flower?.imageHref} alt="" className={classes.image} />
+        </div>
+
+        <p style={{ margin: 3, fontSize: "1rem" }}>
+          <b>
+            <a onClick={() => setOpen(true)}>{flower?.name}</a>
+          </b>
+        </p>
+
+        <div className={classes.priceBlockGrid}>
+          <p className={classes.priceGrid}>{`₽ ${flower?.price}`}</p>
+        </div>
+
+        <div style={{ marginTop: 5, width: "100%" }}>
+          <ZeusButton
+            style={{
+              whiteSpace: "nowrap",
+              padding: 1,
+              height: "auto",
+            }}
+            onClick={() => {
+              if (!inInsideBasket) {
+                flowers.inBasket = [...flowers.inBasket, flower];
+              } else {
+                history.push("/basket");
+              }
+            }}
+            fullWidth
+          >
+            {inInsideBasket ? "В корзине" : "Купить"}{" "}
+          </ZeusButton>
+        </div>
       </div>
 
-      <p style={{ margin: 3, fontSize: "1rem" }}>
-        <b>{flower?.name}</b>
-      </p>
-
-      <div className={classes.priceBlockGrid}>
-        <p className={classes.priceGrid}>{`₽ ${flower?.price}`}</p>
-      </div>
-
-      <div style={{ marginTop: 5, width: "100%" }}>
-        <ZeusButton
-          style={{
-            whiteSpace: "nowrap",
-            padding: 1,
-            height: "auto",
-          }}
-          onClick={() => {
-            if (!inInsideBasket) {
-              flowers.inBasket = [...flowers.inBasket, flower];
-            } else {
-              history.push("/basket");
-            }
-          }}
-          fullWidth
-        >
-          {inInsideBasket ? "В корзине" : "Купить"}{" "}
-        </ZeusButton>
-      </div>
-    </div>
+      <Alert
+        open={open}
+        setOpen={setOpen}
+        customTitle="Описание"
+        content={
+          <>
+            <p style={{ fontSize: "1.2rem" }}>{flower?.description}</p>
+          </>
+        }
+        size="xs"
+      />
+    </>
   );
 });
 
