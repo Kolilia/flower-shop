@@ -91,9 +91,8 @@ class orders {
 
       if (search) {
         params = {
-          $text: {
-            $search: search,
-            $caseSensitive: false,
+          orderId: {
+            $in: [search],
           },
         };
       }
@@ -104,6 +103,7 @@ class orders {
           page: page || 1,
           limit: perPage || 15,
           customLabels: paginateLabels,
+          leanWithId: true,
         },
         async function (err, result) {
           let arrForFront = [];
