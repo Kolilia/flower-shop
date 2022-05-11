@@ -1,15 +1,21 @@
-import { DialogActions, LinearProgress } from "@material-ui/core";
+import {
+  DialogActions,
+  FormHelperText,
+  LinearProgress,
+} from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 import { view } from "@risingstack/react-easy-state";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { Routes } from "../../routing/Routes";
 import SwitchRoutes from "../../routing/SwitchRoutes";
 import flowers from "../../store/flowers";
+import orders from "../../store/orders";
 import ZeusButton from "../System/ZeusButton";
 import { mainThemeColor, secondaryThemeColor } from "./../../helpers/colors";
 import ui from "./../../store/ui";
 import Alert from "./../System/Alert";
+import CustomTextField from "./../System/CustomTextField";
 import Header from "./Header";
 
 const useStyles = makeStyles({
@@ -174,6 +180,143 @@ const GlobalSuccessOrder = view(() => {
   );
 });
 
+const GlobalCheckOrder = view(() => {
+  const { openCheckOrder } = ui;
+
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
+  const [orderId, setOrderId] = useState("");
+  const [step, setStep] = useState(1);
+  const [error, setError] = useState(false);
+
+  const find = useCallback(async () => {
+    setLoading(true);
+
+    const result = await orders.fetchOrderById(orderId?.trim());
+
+    if (result) {
+      setData(result);
+      setStep(2);
+    } else {
+      setError(true);
+    }
+
+    setLoading(false);
+  }, [orderId]);
+
+  useEffect(() => {
+    if (!openCheckOrder) {
+      setError(false);
+      setStep(1);
+      setOrderId("");
+      setData();
+    }
+  }, [openCheckOrder]);
+
+  return (
+    <Alert
+      open={ui.openCheckOrder}
+      customClose={() => (ui.openCheckOrder = false)}
+      content={
+        <>
+          {step === 1 && (
+            <>
+              <CustomTextField
+                value={orderId}
+                placeholder="Введите сохраненный вами номер заказа"
+                onChange={(e, value) => {
+                  setError(false);
+                  setOrderId(value);
+                }}
+                fullWidth
+              />
+
+              {error && (
+                <FormHelperText error>
+                  Заказ с таким Идентификатором не найден
+                </FormHelperText>
+              )}
+
+              <DialogActions>
+                <ZeusButton disabled={loading || !orderId} onClick={find}>
+                  Окей
+                </ZeusButton>
+              </DialogActions>
+            </>
+          )}
+
+          {step === 2 && (
+            <div>
+              <h2 style={{ marginBottom: 10 }}>
+                Найден заказ с таким Идентификатором
+              </h2>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "1.2rem",
+                  marginBottom: 15,
+                }}
+              >
+                <b>Цветы</b>
+                <span>{data?.flowers}</span>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "1.2rem",
+                  marginBottom: 15,
+                }}
+              >
+                <b>Адрес</b>
+                <span>{data?.address}</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "1.2rem",
+                  marginBottom: 15,
+                }}
+              >
+                <b>Город</b>
+                <span>{data?.city}</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "1.2rem",
+                  marginBottom: 15,
+                }}
+              >
+                <b>Почтовый индекс</b>
+                <span>{data?.postalCode}</span>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "1.2rem",
+                  marginBottom: 15,
+                }}
+              >
+                <b>Статус</b>
+                <span>{data?.execute ? "Доставлено" : "Доставляется..."}</span>
+              </div>
+            </div>
+          )}
+        </>
+      }
+      customTitle="Найти заказ"
+    />
+  );
+});
+
 const Error = view(() => {
   return (
     <Alert
@@ -206,6 +349,8 @@ const Root = view(() => {
       <SyncShoppingBasket />
 
       <GlobalSuccessOrder />
+
+      <GlobalCheckOrder />
 
       <main id="main-content">
         <Suspense fallback={<LinearProgress />}>

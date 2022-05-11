@@ -20,4 +20,6 @@ router.get("/api/v1/admin/orders/csv", controller.fetchOrdersByAdminCsv);
 
 router.patch(`/api/v1/admin/orders/:orderId`, controller.completeOrder);
 
+router.get("/api/v1/orders/:orderId", controller.fetchOrderById);
+
 module.exports = router;

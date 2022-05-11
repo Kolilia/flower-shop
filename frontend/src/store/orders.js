@@ -58,6 +58,16 @@ const orders = store({
       return false;
     }
   },
+
+  async fetchOrderById(orderId) {
+    try {
+      const { data } = await get(`${url_backend}/v1/orders/${orderId}`);
+
+      return data;
+    } catch (err) {
+      return false;
+    }
+  },
 });
 
 export default orders;

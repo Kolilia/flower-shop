@@ -6,6 +6,7 @@ import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { secondaryThemeColor } from "../../helpers/colors";
 import flowers from "../../store/flowers";
+import ui from "../../store/ui";
 import Logo from "../System/Logo";
 
 const useStyles = makeStyles({
@@ -64,6 +65,12 @@ const Header = view(() => {
                 />
               )}
               Корзина
+            </div>
+          )}
+
+          {!location?.pathname?.includes("admin") && (
+            <div>
+              <a onClick={() => (ui.openCheckOrder = true)}>Найти заказ</a>
             </div>
           )}
         </div>

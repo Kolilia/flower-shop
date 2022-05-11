@@ -149,6 +149,51 @@ class orders {
     }
   }
 
+  async fetchOrderById(req, res) {
+    try {
+      const { orderId } = req.params;
+
+      if (!orderId) {
+        return res.status(400).json({
+          message: "Возникла ошибка",
+          description: "Order Id обязателен",
+        });
+      }
+
+      const order = await Order.findById(orderId).exec();
+
+      const flowers = await Flower.find({
+        _id: { $in: order?.flowersIds },
+      });
+
+      const shortFlowers = flowers.map((item) => {
+        return item?.name;
+      });
+
+      if (!order) {
+        return res.status(400).json({
+          message: "Возникла ошибка",
+          description: "Такой заказ не найден в базе данных",
+        });
+      }
+
+      return res
+        .status(200)
+        .json({
+          flowers: shortFlowers.join(", "),
+          execute: order.execute ? "Доставлен" : "Не доставлен",
+          address: order?.address,
+          city: order?.city,
+          postalCode: order?.postalCode,
+        });
+    } catch (err) {
+      return res.status(400).json({
+        message: "Возникла ошибка",
+        description: "При запросе данного продукта возникла проблема",
+      });
+    }
+  }
+
   async fetchOrdersByAdminCsv(req, res) {
     try {
       const { page, perPage } = req.query;
