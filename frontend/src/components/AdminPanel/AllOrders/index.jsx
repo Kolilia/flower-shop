@@ -2,7 +2,7 @@
 import { DialogActions, LinearProgress } from "@material-ui/core";
 import { green, orange } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
-import { Check, Warning } from "@material-ui/icons";
+import { Check, ImportExport, Warning } from "@material-ui/icons";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import orders from "../../../store/orders";
 import Alert from "../../System/Alert";
@@ -40,6 +40,13 @@ const useStyles = makeStyles({
   iconExecute: {
     fontSize: "2rem",
     marginLeft: "1rem",
+  },
+  btn: {
+    "@global": {
+      path: {
+        fill: "#fff",
+      },
+    },
   },
 });
 
@@ -261,7 +268,14 @@ const AllOrders = () => {
         />
         <div style={{ height: 15 }} />
 
-        <a onClick={downloadCsv}>Экспортировать текущие заказы в csv</a>
+        <div
+          className={classes.btn}
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          <ZeusButton disabled={loading} onClick={downloadCsv}>
+            Экспорт <ImportExport style={{ marginLeft: 5 }} />
+          </ZeusButton>
+        </div>
 
         <div style={{ height: 15 }} />
 
