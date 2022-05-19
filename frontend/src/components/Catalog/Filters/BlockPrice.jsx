@@ -15,7 +15,7 @@ const BlockPrice = view(() => {
       <div style={{ width: 150 }}>
         <CustomTextField
           value={flowers.params.fromPrice || ""}
-          placeholder="От"
+          placeholder="Цена от"
           onChange={(e, value) => {
             flowers.params.page = 1;
             flowers.params.fromPrice = value;

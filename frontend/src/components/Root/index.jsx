@@ -306,7 +306,7 @@ const GlobalCheckOrder = view(() => {
                 }}
               >
                 <b>Статус</b>
-                <span>{data?.execute ? "Доставлено" : "Доставляется..."}</span>
+                <span>{data?.execute}</span>
               </div>
             </div>
           )}

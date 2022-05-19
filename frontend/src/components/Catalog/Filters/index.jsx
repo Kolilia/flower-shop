@@ -73,7 +73,7 @@ const Filters = view(() => {
 
       <div className={classes.root}>
         <h2 style={{ margin: 0, marginBottom: 15, textAlign: "center" }}>
-          Фильтра
+          Поиск
         </h2>
 
         <SearchField defaultValue={flowers.params.search} onSearch={onSearch} />

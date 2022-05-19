@@ -51,7 +51,7 @@ const SearchField = ({ onSearch, defaultValue, placeholder, variant }) => {
 
   return (
     <TextField
-      placeholder={placeholder || "Поиск..."}
+      placeholder={placeholder || "Введите название..."}
       value={value || ""}
       inputProps={{ "aria-label": "поиск" }}
       style={{ fontFamily: "'Roboto Flex', sans-serif" }}

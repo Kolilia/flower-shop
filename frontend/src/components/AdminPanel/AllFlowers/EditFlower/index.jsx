@@ -120,7 +120,7 @@ const EditFlower = ({ open, setOpen, refetch, flower }) => {
             autoComplete="off"
             fullWidth
             multiline
-            rows={3}
+            rows={8}
           />
 
           <div style={{ height: 10 }} />

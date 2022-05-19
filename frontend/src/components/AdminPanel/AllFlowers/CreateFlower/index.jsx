@@ -139,7 +139,7 @@ const CreateProduct = () => {
           autoComplete="off"
           fullWidth
           multiline
-          rows={3}
+          rows={8}
         />
 
         <div style={{ height: 20 }} />
